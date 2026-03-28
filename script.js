@@ -1,12 +1,6 @@
 const OPENWEATHER_API_KEY = '6fd81aa4610b3d15d65c91fbd35e8805';
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-console.log('Environment check:', {
-    hasSupabaseUrl: !!SUPABASE_URL,
-    hasSupabaseKey: !!SUPABASE_ANON_KEY,
-    supabaseUrl: SUPABASE_URL
-});
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://rhjtbcqwukwblqwhrffq.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJoanRiY3F3dWt3Ymxxd2hyZmZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MDY0NzIsImV4cCI6MjA5MDI4MjQ3Mn0.IZw_BEgLzp8bgUgr4IFOB2J-Pto8KgVepTLKFqDe6AE';
 
 const elements = {
     searchForm: document.getElementById('searchForm'),
