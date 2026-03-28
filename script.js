@@ -137,25 +137,33 @@ async function fetchForecast(city) {
 }
 
 async function fetchNews(city) {
-    const url = `${SUPABASE_URL}/functions/v1/city-news?city=${encodeURIComponent(city)}`;
+    try {
+        const url = `${SUPABASE_URL}/functions/v1/city-news?city=${encodeURIComponent(city)}`;
 
-    const response = await fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json',
-        }
-    });
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+            }
+        });
 
-    if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-            throw new Error('Unable to fetch news. Please try again later.');
-        } else {
-            throw new Error('Failed to fetch news data. Please try again later.');
+        if (!response.ok) {
+            console.error('News fetch failed:', response.status, response.statusText);
+            return [];
         }
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            console.error('Received non-JSON response from news API');
+            return [];
+        }
+
+        const data = await response.json();
+        return data.articles || [];
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        return [];
     }
-
-    const data = await response.json();
-    return data.articles || [];
 }
 
 function displayWeather(data) {
@@ -332,11 +340,9 @@ async function handleSearch(event) {
     showLoading();
 
     try {
-        const [weatherData, forecastData, newsArticles] = await Promise.all([
-            fetchWeather(city),
-            fetchForecast(city),
-            fetchNews(city)
-        ]);
+        const weatherData = await fetchWeather(city);
+        const forecastData = await fetchForecast(city);
+        const newsArticles = await fetchNews(city);
 
         displayWeather(weatherData);
         displayForecast(forecastData);
