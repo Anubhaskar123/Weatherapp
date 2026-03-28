@@ -2,6 +2,12 @@ const OPENWEATHER_API_KEY = '6fd81aa4610b3d15d65c91fbd35e8805';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+console.log('Environment check:', {
+    hasSupabaseUrl: !!SUPABASE_URL,
+    hasSupabaseKey: !!SUPABASE_ANON_KEY,
+    supabaseUrl: SUPABASE_URL
+});
+
 const elements = {
     searchForm: document.getElementById('searchForm'),
     cityInput: document.getElementById('cityInput'),
