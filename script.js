@@ -147,18 +147,30 @@ async function fetchNews(city) {
             }
         });
 
+        const contentType = response.headers.get('content-type');
+
         if (!response.ok) {
+            const errorText = await response.text();
             console.error('News fetch failed:', response.status, response.statusText);
+            console.error('Error response:', errorText);
             return [];
         }
 
-        const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
+            const responseText = await response.text();
             console.error('Received non-JSON response from news API');
+            console.error('Content-Type:', contentType);
+            console.error('Response preview:', responseText.substring(0, 500));
             return [];
         }
 
         const data = await response.json();
+
+        if (data.error) {
+            console.error('API returned error:', data.error);
+            return [];
+        }
+
         return data.articles || [];
     } catch (error) {
         console.error('Error fetching news:', error);
